@@ -3,7 +3,6 @@ import 'package:image_picker/image_picker.dart';
 // import 'dart:html';
 import 'dart:io';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -12,23 +11,66 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  XFile? _selectedImage;
+
   Future<void> _openGallery(BuildContext context) async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
+      setState(() {
+        _selectedImage = image;
+      });
       // If image is selected, show it in a dialog or popup container
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Uploaded Image',
-            style: TextStyle(
-              fontSize: 17,
-            ),),
-            content: Image.file(
-              File(image.path),
+            title: Text(
+              'Uploaded Image',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 17,
+              ),
             ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.file(
+                  File(image.path),
+                ),
+                SizedBox(height: 10),
+                FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the Alert Dialog
+                  },
+                  child: Text('Use this image',
+                      style: TextStyle(
+                        fontSize: 15,
+                        // letterSpacing: 1,
+                      )),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          10.0), // Adjust the radius to change the shape
+                    ),
+                  ),
+                )
+              ],
+            ),
+            actions: <Widget>[
+              Container(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: Icon(Icons.cancel),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Closing the dialog
+                  },
+                ),
+              ),
+            ],
           );
         },
       );
@@ -91,7 +133,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         10.0), // Adjust the radius to change the shape
                   ),
                 ),
-              )
+              ),
+              SizedBox(height: 10),
+              if (_selectedImage != null)
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                  child: Image.file(
+                    File(_selectedImage!.path),
+                    height: 400, // Adjust as needed
+                    width: 400, // Adjust as needed
+                  ),
+                ),
             ],
           ),
         ),
@@ -99,4 +152,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
