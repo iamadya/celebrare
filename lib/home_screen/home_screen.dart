@@ -1,10 +1,39 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'dart:html';
+import 'dart:io';
 
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Future<void> _openGallery(BuildContext context) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // If image is selected, show it in a dialog or popup container
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Uploaded Image',
+            style: TextStyle(
+              fontSize: 17,
+            ),),
+            content: Image.file(
+              File(image.path),
+            ),
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +76,7 @@ class HomeScreen extends StatelessWidget {
               FilledButton(
                 onPressed: () {
                   // print('button  clicked');
+                  _openGallery(context);
                 },
                 child: Text('Choose from Device',
                     style: TextStyle(
