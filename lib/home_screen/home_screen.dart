@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 // import 'dart:html';
 import 'dart:io';
 
+import '../camera_operations/camera_operations.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key});
 
@@ -52,9 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CameraOperations(imagePath: image.path),
+                        builder: (context) => CameraOperation(imagePath: _selectedImage!.path),
                       ),
                     );
+
                   },
                   child: Text(
                     'Use this image',

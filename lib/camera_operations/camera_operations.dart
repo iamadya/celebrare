@@ -1,75 +1,49 @@
-import 'dart:typed_data';
-
-import 'package:flutter/material.dart';
-import 'package:image/image.dart' as img; // Import image package
 import 'dart:io';
+import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 
-class CameraOperations extends StatefulWidget {
+class CameraOperation extends StatefulWidget {
   final String imagePath;
 
-  const CameraOperations({required this.imagePath});
+  const CameraOperation({Key? key, required this.imagePath}) : super(key: key);
 
   @override
-  _CameraOperationsState createState() => _CameraOperationsState();
+  _CameraOperationState createState() => _CameraOperationState();
 }
 
-class _CameraOperationsState extends State<CameraOperations> {
-  late File _imageFile;
-  late img.Image? _image;
+class _CameraOperationState extends State<CameraOperation> {
+  File? _imageFile;
+  double _rotation = 0;
+  bool _flipped = false;
 
   @override
   void initState() {
     super.initState();
     _imageFile = File(widget.imagePath);
-    _loadImage();
-  }
-
-  Future<void> _loadImage() async {
-    final Uint8List bytes = await _imageFile.readAsBytes();
-    final Uint8List imageUint8List = Uint8List.fromList(bytes);
-
-    _image = img.decodeImage(imageUint8List);
-    if (_image == null) {
-      throw Exception("Unable to load image");
-    }
-    setState(() {});
   }
 
   void _rotateImage() {
-    if (_image != null) {
-      final img.Image newImage = img.copyRotate(_image!, 90); // Rotate 90 degrees
-      setState(() {
-        _image = newImage;
-      });
-    }
+    setState(() {
+      _rotation += 90;
+    });
   }
 
   void _flipImage() {
-    if (_image != null) {
-      final img.Image newImage = img.flipHorizontal(_image!); // Flip horizontally
-      setState(() {
-        _image = newImage;
-      });
-    }
-  }
-
-  void _cropImage() {
-    if (_image != null) {
-      final img.Image newImage = img.copyCrop(_image!, 100, 100, 300, 300); // Crop from (100,100) to (300,300)
-      setState(() {
-        _image = newImage;
-      });
-    }
+    setState(() {
+      _flipped = !_flipped;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_outlined),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           },
         ),
         actions: <Widget>[
@@ -83,15 +57,21 @@ class _CameraOperationsState extends State<CameraOperations> {
           ),
           IconButton(
             icon: Icon(Icons.crop),
-            onPressed: _cropImage,
+            onPressed: _rotateImage,
           ),
         ],
       ),
-      body: _image != null
-          ? Center(
-        child: Image.memory(Uint8List.fromList(img.encodeJpg(_image!))),
-      )
-          : Center(child: CircularProgressIndicator()),
+      body: Center(
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationZ(_rotation * 0.0174533 * (_flipped ? -1 : 1)),
+          child: Image.file(
+            _imageFile!,
+            height: 400,
+            width: 400,
+          ),
+        ),
+      ),
     );
   }
 }
