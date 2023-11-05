@@ -1,3 +1,4 @@
+import 'package:celebrare/camera_operations/camera_operations.dart';
 import 'package:celebrare/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.green),
+      // theme: ThemeData(primarySwatch: Colors.green),
       home: HomeScreen(),
     );
   }
