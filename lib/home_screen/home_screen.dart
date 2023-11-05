@@ -30,68 +30,87 @@ class _HomeScreenState extends State<HomeScreen> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Uploaded Image',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 17,
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (_selectedImage != null)
-                  Image.file(
-                    File(_selectedImage!.path),
-                  ),
-                SizedBox(height: 10),
-                FilledButton(
-                  onPressed: () {
-                    setState(() {
-                      _showSelectedImage =
-                          true; // Set the flag to true on button press
-                    });
-                    Navigator.of(context).pop(); // Close the Alert Dialog
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            CameraOperation(imagePath: _selectedImage!.path),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Use this image',
-                    style: TextStyle(
-                      fontSize: 14,
+          return Dialog(
+            shape: RoundedRectangleBorder(),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 1,
+              // Customize the content inside the dialog as per your requirements
+              // For instance, you can add your image, buttons, etc., as in the AlertDialog content
+              // Ensure to adjust the styling and structure according to your needs
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_selectedImage != null)
+                    Image.file(
+                      File(_selectedImage!.path),
+                    ),
+                  SizedBox(height: 10),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildImageWithBorder(
+                            'assets/images/user_image_frame_1.png'),
+                        _buildImageWithBorder(
+                            'assets/images/user_image_frame_2.png'),
+                        _buildImageWithBorder(
+                            'assets/images/user_image_frame_3.png'),
+                        _buildImageWithBorder(
+                            'assets/images/user_image_frame_4.png'),
+                      ],
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF088178),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  FilledButton(
+                    onPressed: () {
+                      setState(() {
+                        _showSelectedImage = true;
+                      });
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CameraOperation(imagePath: _selectedImage!.path),
+                        ),
+                      );
+                    },
+                    child: Text('Use this image'),
+                    // Add button styling here
+                  ),
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: Icon(Icons.cancel),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
                   ),
-                )
-              ],
-            ),
-            actions: <Widget>[
-              Container(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.cancel),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Closing the dialog
-                  },
-                ),
+                ],
               ),
-            ],
+            ),
           );
         },
       );
     }
+  }
+
+  Widget _buildImageWithBorder(String imagePath) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Image.asset(
+        imagePath,
+        width: 40,
+        height: 40,
+      ),
+    );
   }
 
   @override
