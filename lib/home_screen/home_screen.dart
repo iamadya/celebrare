@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   XFile? _selectedImage;
+  bool _showSelectedImage = false;
 
   Future<void> _openGallery(BuildContext context) async {
     final ImagePicker _picker = ImagePicker();
@@ -36,12 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (_showSelectedImage) // Check if the flag is true to show the image
+                  Image.file(
+                    File(image.path),
+                  ),
                 Image.file(
                   File(image.path),
                 ),
                 SizedBox(height: 10),
                 FilledButton(
                   onPressed: () {
+                    setState(() {
+                      _showSelectedImage = true;  //if the condition is true show image otherwise don't
+                    });
                     Navigator.of(context).pop(); // Close the Alert Dialog
                   },
                   child: Text('Use this image',
@@ -135,14 +143,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              if (_selectedImage != null)
+              if (_selectedImage != null && _showSelectedImage)
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                   child: Image.file(
                     File(_selectedImage!.path),
-                    height: 400, // Adjust as needed
-                    width: 400, // Adjust as needed
+                    height: 400,
+                    width: 400,
                   ),
                 ),
             ],
