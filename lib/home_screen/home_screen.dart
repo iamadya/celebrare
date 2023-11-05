@@ -23,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (image != null) {
       setState(() {
         _selectedImage = image;
-        _showSelectedImage = false; // Reset the flag when a new image is selected
+        _showSelectedImage =
+            false; // Reset the flag when a new image is selected
       });
 
       showDialog(
@@ -48,28 +49,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 FilledButton(
                   onPressed: () {
                     setState(() {
-                      _showSelectedImage = true; // Set the flag to true on button press
+                      _showSelectedImage =
+                          true; // Set the flag to true on button press
                     });
                     Navigator.of(context).pop(); // Close the Alert Dialog
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CameraOperation(imagePath: _selectedImage!.path),
+                        builder: (context) =>
+                            CameraOperation(imagePath: _selectedImage!.path),
                       ),
                     );
-
                   },
                   child: Text(
                     'Use this image',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF088178),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 )
@@ -96,40 +98,65 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //... Your existing app bar code remains unchanged
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_outlined),
+          onPressed: () {
+            exit(0);
+          },
+        ),
+        title: Text('Add Image / Icon',
+            style: TextStyle(
+                fontFamily: 'Bitter',
+                fontStyle: FontStyle.italic,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: Colors.grey[600])),
+        centerTitle: true,
+        elevation: 10,
       ),
-      body: Container(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 30),
-              Text('Upload Image', style: TextStyle(fontSize: 16)),
-              SizedBox(height: 20),
-              FilledButton(
-                onPressed: () {
-                  _openGallery(context);
-                },
-                child: Text('Choose from Device', style: TextStyle(fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 30),
+            Text('Upload Image',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Bitter',
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w700)),
+            SizedBox(height: 20),
+            FilledButton(
+              onPressed: () {
+                _openGallery(context);
+              },
+              child: Text('Choose from Device',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                    // height: 0.5
+                  )),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF088178),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              SizedBox(height: 10),
-              if (_selectedImage != null && _showSelectedImage)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                  child: Image.file(
-                    File(_selectedImage!.path),
-                    height: 400,
-                    width: 400,
-                  ),
+            ),
+            SizedBox(height: 10),
+            if (_selectedImage != null && _showSelectedImage)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                child: Image.file(
+                  File(_selectedImage!.path),
+                  height: 400,
+                  width: 400,
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

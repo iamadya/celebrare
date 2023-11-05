@@ -37,11 +37,12 @@ class _CameraOperationState extends State<CameraOperation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[850],
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.grey[900],
         foregroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_outlined),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -49,14 +50,17 @@ class _CameraOperationState extends State<CameraOperation> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.rotate_right),
+            iconSize: 30,
             onPressed: _rotateImage,
           ),
           IconButton(
             icon: Icon(Icons.flip),
+            iconSize: 30,
             onPressed: _flipImage,
           ),
           IconButton(
             icon: Icon(Icons.crop),
+            iconSize: 30,
             onPressed: _rotateImage,
           ),
         ],
@@ -64,7 +68,8 @@ class _CameraOperationState extends State<CameraOperation> {
       body: Center(
         child: Transform(
           alignment: Alignment.center,
-          transform: Matrix4.rotationZ(_rotation * 0.0174533 * (_flipped ? -1 : 1)),
+          transform:
+              Matrix4.rotationZ(_rotation * 0.0174533 * (_flipped ? -1 : 1)),
           child: Image.file(
             _imageFile!,
             height: 400,
