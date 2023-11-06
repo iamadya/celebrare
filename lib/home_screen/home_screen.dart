@@ -23,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (image != null) {
       setState(() {
         _selectedImage = image;
-        _showSelectedImage =
-            false; // Reset the flag when a new image is selected
+        _showSelectedImage = false;
       });
 
       showDialog(
@@ -95,7 +94,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width * 1,
                     child: FilledButton(
                       onPressed: () {
+                        setState(() {
+                          _showSelectedImage = true;
+                        });
                         // _openGallery(context);
+                        Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -198,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 10),
-            if (_selectedImage != null && _showSelectedImage)
+            if (_showSelectedImage && _selectedImage != null)
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
