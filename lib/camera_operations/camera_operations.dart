@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 class CameraOperation extends StatefulWidget {
@@ -14,7 +13,8 @@ class CameraOperation extends StatefulWidget {
 class _CameraOperationState extends State<CameraOperation> {
   File? _imageFile;
   double _rotation = 0;
-  bool _flipped = false;
+  bool _flippedHorizontally = false;
+  bool _flippedVertically = false;
 
   @override
   void initState() {
@@ -28,9 +28,15 @@ class _CameraOperationState extends State<CameraOperation> {
     });
   }
 
-  void _flipImage() {
+  void _flipHorizontally() {
     setState(() {
-      _flipped = !_flipped;
+      _flippedHorizontally = !_flippedHorizontally;
+    });
+  }
+
+  void _flipVertically() {
+    setState(() {
+      _flippedVertically = !_flippedVertically;
     });
   }
 
@@ -56,20 +62,21 @@ class _CameraOperationState extends State<CameraOperation> {
           IconButton(
             icon: Icon(Icons.flip),
             iconSize: 30,
-            onPressed: _flipImage,
+            onPressed: _flipHorizontally,
           ),
           IconButton(
-            icon: Icon(Icons.crop),
+            icon: Icon(Icons.flip_camera_android),
             iconSize: 30,
-            onPressed: _rotateImage,
+            onPressed: _flipVertically,
           ),
         ],
       ),
       body: Center(
         child: Transform(
           alignment: Alignment.center,
-          transform:
-              Matrix4.rotationZ(_rotation * 0.0174533 * (_flipped ? -1 : 1)),
+          transform: Matrix4.identity()
+            ..rotateZ(_rotation * (3.1415926535897932 / 180))
+            ..scale(_flippedHorizontally ? -1.0 : 1.0, _flippedVertically ? -1.0 : 1.0),
           child: Image.file(
             _imageFile!,
             height: 400,
