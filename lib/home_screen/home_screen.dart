@@ -25,6 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
         _selectedImage = image;
         _showSelectedImage =
             false; // Reset the flag when a new image is selected
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) =>
+        //         CameraOperation(imagePath: _selectedImage!.path),
+        //   ),
+        // );
       });
 
       showDialog(
@@ -33,14 +40,33 @@ class _HomeScreenState extends State<HomeScreen> {
           return Dialog(
             shape: RoundedRectangleBorder(),
             child: Container(
-              width: MediaQuery.of(context).size.width * 1,
-              // Customize the content inside the dialog as per your requirements
-              // For instance, you can add your image, buttons, etc., as in the AlertDialog content
-              // Ensure to adjust the styling and structure according to your needs
+              width: MediaQuery.of(context).size.width * 0.9,
               padding: EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: Icon(Icons.cancel, size: 30),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  // Title Section
+                  Text(
+                    'Uploaded Image',
+                    style: TextStyle(
+                      fontFamily: 'Bitter',
+                      color: Colors.grey[700],
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+
                   if (_selectedImage != null)
                     Image.file(
                       File(_selectedImage!.path),
@@ -50,6 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            'Original',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ),
                         _buildImageWithBorder(
                             'assets/images/user_image_frame_1.png'),
                         _buildImageWithBorder(
@@ -61,30 +94,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _showSelectedImage = true;
-                      });
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CameraOperation(imagePath: _selectedImage!.path),
-                        ),
-                      );
-                    },
-                    child: Text('Use this image'),
-                    // Add button styling here
-                  ),
-                  Container(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: Icon(Icons.cancel),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: FilledButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        _openGallery(context);
                       },
+                      child: Text(
+                        'Use this image',
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF088178),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -149,13 +174,9 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 _openGallery(context);
               },
-              child: Text('Choose from Device',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w700,
-                    // height: 0.5
-                  )),
+              child: Text(
+                'Choose from Device',
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF088178),
                 foregroundColor: Colors.white,

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CameraOperation extends StatefulWidget {
   final String imagePath;
 
-  const CameraOperation({Key? key, required this.imagePath});
+  const CameraOperation({Key? key, required this.imagePath}) : super(key: key);
 
   @override
   _CameraOperationState createState() => _CameraOperationState();
@@ -15,7 +15,6 @@ class _CameraOperationState extends State<CameraOperation> {
   double _rotation = 0;
   bool _flippedHorizontally = false;
   bool _flippedVertically = false;
-  double _cropBoxSize = 200; // Initial size of the crop box
 
   @override
   void initState() {
@@ -29,17 +28,25 @@ class _CameraOperationState extends State<CameraOperation> {
     });
   }
 
-  void _flipHorizontally() {
+  void _flipImage() {
     setState(() {
       _flippedHorizontally = !_flippedHorizontally;
-    });
-  }
-
-  void _flipVertically() {
-    setState(() {
       _flippedVertically = !_flippedVertically;
     });
   }
+
+  Future<String> _getFlippedImagePath() async {
+    // Replace this with your logic to flip the image and save it to a new file
+    // For example:
+    // Perform flipping operation on _imageFile
+    // File flippedFile = performFlippingOperation(_imageFile);
+    // String flippedImagePath = flippedFile.path;
+
+    String flippedImagePath = _imageFile!.path; // Replace this line with the actual flipping logic
+
+    return flippedImagePath;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +70,15 @@ class _CameraOperationState extends State<CameraOperation> {
           IconButton(
             icon: Icon(Icons.flip),
             iconSize: 30,
-            onPressed: _flipHorizontally,
+            onPressed: _flipImage,
           ),
           IconButton(
-            icon: Icon(Icons.crop_rotate),
+            icon: Icon(Icons.crop),
             iconSize: 30,
-            onPressed: _flipVertically,
+            onPressed: () async {
+              String flippedImagePath = await _getFlippedImagePath();
+              Navigator.pop(context, flippedImagePath);
+            },
           ),
         ],
       ),
@@ -76,60 +86,13 @@ class _CameraOperationState extends State<CameraOperation> {
         child: Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
-            ..rotateZ(_rotation * (3.1415926535897932 / 180))
+            ..rotateZ(_rotation * 0.0174533)
             ..scale(_flippedHorizontally ? -1.0 : 1.0, _flippedVertically ? -1.0 : 1.0),
-          child: Stack(
-            children: [
-              Image.file(
-                _imageFile!,
-                height: 400,
-                width: 400,
-              ),
-              Positioned(
-                top: (400 - _cropBoxSize) / 2,
-                left: (400 - _cropBoxSize) / 2,
-                child: CropBox(
-                  size: _cropBoxSize,
-                  onSizeChanged: (newSize) {
-                    setState(() {
-                      _cropBoxSize = newSize;
-                    });
-                  },
-                ),
-              ),
-            ],
+          child: Image.file(
+            _imageFile!,
+            height: 400,
+            width: 400,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class CropBox extends StatelessWidget {
-  final double size;
-  final ValueChanged<double> onSizeChanged;
-
-  const CropBox({
-    required this.size,
-    required this.onSizeChanged,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onScaleStart: (details) {
-        onSizeChanged(size);
-      },
-      onScaleUpdate: (details) {
-        double newSize = size * details.scale;
-        onSizeChanged(newSize.clamp(100.0, 400.0)); // Limit the minimum and maximum size
-      },
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
         ),
       ),
     );
