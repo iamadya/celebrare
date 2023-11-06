@@ -12,8 +12,9 @@ class CameraOperation extends StatefulWidget {
 
 class _CameraOperationState extends State<CameraOperation> {
   File? _imageFile;
-  bool _flipped = false;
   double _rotation = 0;
+  bool _flippedHorizontally = false;
+  bool _flippedVertically = false;
 
   @override
   void initState() {
@@ -27,17 +28,15 @@ class _CameraOperationState extends State<CameraOperation> {
     });
   }
 
-  void _flipImage(bool isVertical) {
-    // Perform the flip operation (horizontal or vertical)
+  void _flipHorizontally() {
     setState(() {
-      _flipped = !_flipped;
-      if (isVertical) {
-        // Flip vertically
-        print('Flipping vertically');
-      } else {
-        // Flip horizontally
-        print('Flipping horizontally');
-      }
+      _flippedHorizontally = !_flippedHorizontally;
+    });
+  }
+
+  void _flipVertically() {
+    setState(() {
+      _flippedVertically = !_flippedVertically;
     });
   }
 
@@ -60,28 +59,15 @@ class _CameraOperationState extends State<CameraOperation> {
             iconSize: 30,
             onPressed: _rotateImage,
           ),
-          PopupMenuButton(
+          IconButton(
             icon: Icon(Icons.flip),
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  child: Text('Flip Horizontally'),
-                  value: false,
-                ),
-                PopupMenuItem(
-                  child: Text('Flip Vertically'),
-                  value: true,
-                ),
-              ];
-            },
-            onSelected: (bool isVertical) {
-              _flipImage(isVertical);
-            },
+            iconSize: 30,
+            onPressed: _flipHorizontally,
           ),
           IconButton(
-            icon: Icon(Icons.crop),
+            icon: Icon(Icons.flip_camera_android),
             iconSize: 30,
-            onPressed: () {},
+            onPressed: _flipVertically,
           ),
         ],
       ),
@@ -89,7 +75,8 @@ class _CameraOperationState extends State<CameraOperation> {
         child: Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
-            ..scale(_flipped ? -1.0 : 1.0, _flipped ? -1.0 : 1.0),
+            ..rotateZ(_rotation * (3.1415926535897932 / 180))
+            ..scale(_flippedHorizontally ? -1.0 : 1.0, _flippedVertically ? -1.0 : 1.0),
           child: Image.file(
             _imageFile!,
             height: 400,
