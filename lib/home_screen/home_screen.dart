@@ -34,13 +34,26 @@ class _HomeScreenState extends State<HomeScreen> {
             shape: RoundedRectangleBorder(),
             child: Container(
               width: MediaQuery.of(context).size.width * 1,
-              // Customize the content inside the dialog as per your requirements
-              // For instance, you can add your image, buttons, etc., as in the AlertDialog content
-              // Ensure to adjust the styling and structure according to your needs
               padding: EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon:
+                          Icon(Icons.cancel, size: 30, color: Colors.grey[600]),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  Text('Uploaded Image',
+                      style: TextStyle(
+                          fontFamily: 'Bitter',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          letterSpacing: 2)),
                   if (_selectedImage != null)
                     Image.file(
                       File(_selectedImage!.path),
@@ -50,6 +63,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  5), // Optional: Set border radius for rounded corners
+                            ),
+                            child: Text(
+                              'Original',
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.bold),
+                            )),
                         _buildImageWithBorder(
                             'assets/images/user_image_frame_1.png'),
                         _buildImageWithBorder(
@@ -61,30 +90,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  FilledButton(
-                    onPressed: () {
-                      setState(() {
-                        _showSelectedImage = true;
-                      });
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CameraOperation(imagePath: _selectedImage!.path),
-                        ),
-                      );
-                    },
-                    child: Text('Use this image'),
-                    // Add button styling here
-                  ),
-                  Container(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: Icon(Icons.cancel),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 1,
+                    child: FilledButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        // _openGallery(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CameraOperation(
+                                imagePath: _selectedImage!.path),
+                          ),
+                        );
                       },
+                      child: Text('Use this image',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                            // height: 0.5
+                          )),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF088178),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
                     ),
                   ),
                 ],
